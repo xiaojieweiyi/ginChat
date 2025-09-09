@@ -3,8 +3,8 @@
 
     function upload(dom){
         uploadfile("attach/upload",dom,function(res){
-            if(res.code==0){
-                app.sendpicmsg(res.data)
+            if(res.Code==0){
+                app.sendpicmsg(res.Data)
             }
 
         })
@@ -32,7 +32,7 @@
                     title:"",
                     doutu:{
                         config:{
-                            "baseurl":"/asset/plugins/doutu/",
+                            "baseurl":"asset/plugins/doutu",
                             "pkgids":["mkgif","emoj"]
                         },
                         packages:[],
@@ -151,7 +151,7 @@
                                         console.log("ondataavailable");
                                         uploadblob("attach/upload",event.data,".mp3",res=>{
                                             var duration = Math.ceil((new Date().getTime()-this.duration)/1000);
-                                            this.sendaudiomsg(res.data,duration);
+                                            this.sendaudiomsg(res.Data,duration);
                                         })
                                         stream.getTracks().forEach(function (track) {
                                             track.stop();
@@ -201,7 +201,8 @@
                         var that = this;
                         for(var id in res){
                             //console.log("res[i]",id,res[id])
-                            post(res[id],{},function(pkginfo){
+                            this.$http.get(res[id]).then(response => {
+                                pkginfo = response.data
                                 //console.log("post res[i]",id,res[id],pkginfo)
                                 var baseurl= config.baseurl+"/"+pkginfo.id+"/"
                                 for(var j in pkginfo.assets){
@@ -365,12 +366,12 @@
                     },
                     _addfriend:function(dstobj){
                         var that = this
-                        post("contact/addfriend",{dstid:dstobj,userid: userId()},function(res){
-                            if(res.code==0){
+                        post("contact/addfriend",{targetId:dstobj,userId: userId()},function(res){
+                            if(res.Code==0){
                                 mui.toast("添加成功");
                                 that.loadfriends();
                             }else{
-                                mui.toast(res.msg);
+                                mui.toast(res.Msg);
                             }
                         })
                     },
